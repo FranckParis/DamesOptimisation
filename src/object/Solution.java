@@ -2,6 +2,7 @@ package object;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Quentin on 15/03/2017.
@@ -11,7 +12,9 @@ public class Solution {
     int size;
 
     public Solution(ArrayList<Integer> state){
+
         size = state.size();
+        this.state = new ArrayList<>(state);
     }
 
     public Solution(int n){
@@ -23,6 +26,12 @@ public class Solution {
         Collections.shuffle(state);
     }
 
+    public int getIState(int i){
+        if (i<0 || i> state.size()){
+            return 0;
+        }
+        return this.state.get(i);
+    }
     public int getSize(){
         return size;
     }
@@ -53,6 +62,7 @@ public class Solution {
     }
 
     public String toString(){
+
         StringBuilder stb = new StringBuilder();
         for (int i=0; i<state.size();i++) {
             int posQueen = state.get(i);
