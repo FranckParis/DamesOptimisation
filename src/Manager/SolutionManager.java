@@ -2,10 +2,7 @@ package Manager;
 
 import object.Solution;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Quentin on 15/03/2017.
@@ -84,14 +81,14 @@ public class SolutionManager {
 
     public Solution tabou(int n){
         Solution xi = new Solution(n);
-        Solution xmin = xi;
+        Solution xmin = new Solution(xi.getState());
         int fmin = xmin.getNbConflicts();
         int fi = fmin;
         Solution xVoisin;
         int fVoisin;
-        int yVoisin;
         List<Solution> voisins = new ArrayList<Solution>();
         List<Integer> forbiddenMoves = new ArrayList<Integer>();
+        int forbiddenMoveAllowedSize= 5;
         int i= 0;
         int nbIterations = 500;
         do{
@@ -100,12 +97,18 @@ public class SolutionManager {
                 xVoisin = this.getBestSolution(voisins);
                 fVoisin = xVoisin.getNbConflicts();
                 if(fVoisin >= fi){
+                    if(forbiddenMoves.size() >= 2*forbiddenMoveAllowedSize){
+                        forbiddenMoves.remove(1);
+                        forbiddenMoves.remove(0);
+                    }
                     forbiddenMoves.addAll(this.getPreviousMove(xVoisin, xi));
                 }
                 if(fVoisin < fmin){
                     xmin = new Solution(xVoisin.getState());
                     fmin = fVoisin;
                 }
+                xi = new Solution(xVoisin.getState());
+                fi = xi.getNbConflicts();
             }
             i++;
         }while (!voisins.isEmpty() && i<nbIterations);
@@ -113,35 +116,30 @@ public class SolutionManager {
     }
 
     private List<Solution> getTabouVoisins(Solution solution, List<Integer> forbiddenMoves) {
+        Solution copySolution = new Solution(solution.getState());
         ArrayList<Solution> listSolutions = new ArrayList<Solution>();
-        for(int i=0;i<solution.getSize()-1;i++){
-            for(int j=i+1;j<solution.getSize();j++){
+        for(int i=0;i<copySolution.getSize()-1;i++){
+            loopsolution: for(int j=i+1;j<copySolution.getSize();j++){
+                copySolution = new Solution(solution.getState());
                 for(int forbidden = 0; forbidden<forbiddenMoves.size();forbidden++){
                     if (forbiddenMoves.get(forbidden) == i){
-                        if(i%2 == 0){
+                        if(forbidden%2 == 0){
                             if(forbiddenMoves.get(forbidden + 1) == j){
-                                continue;
+                                continue loopsolution;
                             }
                         }else{
                             if(forbiddenMoves.get(forbidden - 1) == j){
-                                continue;
+                                continue loopsolution;
                             }
                         }
                     }
                 }
-                listSolutions.add(new Solution(solution.change(solution.getState(),i,j)));
+                listSolutions.add(new Solution(copySolution.change(copySolution.getState(),i,j)));
             }
         }
         return listSolutions;
     }
 
-    private ArrayList<Integer> indexOfAll(Object obj, ArrayList list){
-        ArrayList<Integer> indexList = new ArrayList<Integer>();
-        for (int i = 0; i < list.size(); i++)
-            if(obj.equals(list.get(i)))
-                indexList.add(i);
-        return indexList;
-    }
 
     private ArrayList<Integer> getPreviousMove(Solution xVoisin, Solution xi) {
         ArrayList<Integer> move = new ArrayList<>();
@@ -162,11 +160,11 @@ public class SolutionManager {
             f= solution.getNbConflicts();
             if(f<fBest){
                 fBest = f;
-                sBest = solution;
+                sBest = new Solution(solution.getState());
             }
             i++;
         }
-        return sBest;
+        return new Solution(sBest.getState());
     }
 
 }
