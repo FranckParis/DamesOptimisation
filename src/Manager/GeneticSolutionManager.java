@@ -12,10 +12,12 @@ public class GeneticSolutionManager {
 
     public SolutionManager solutionManager;
     public Random random;
+    public int dimension;
 
-    public GeneticSolutionManager(){
+    public GeneticSolutionManager(int n){
         this.solutionManager = new SolutionManager();
         this.random = new Random();
+        this.dimension = n;
     }
 
     public ArrayList<Solution> crossing (ArrayList<Solution> inputSolutions, float crossingProba){
@@ -93,13 +95,109 @@ public class GeneticSolutionManager {
         }
     }
 
-    public Solution geneticResolution(ArrayList<Solution> inputSolutions, float crossingProba, float mutationProba){
 
-        // Init
-        ArrayList<Solution> outputSolutions = inputSolutions;
+    public ArrayList<ArrayList<Solution>> reproduction(ArrayList<Solution> inputSolutions, int reprodSize, int initialPopSize){
+
+        //Init
+        ArrayList<ArrayList<Solution>> outputSolutions = new ArrayList<>();
+        ArrayList<Solution> initialAdd = new ArrayList<>();
+
+        Solution bestSol = new Solution(this.dimension);
+        int bestSolPos = 0;
+        int cptBestSol = 0;
+        int min = inputSolutions.get(0).getNbConflicts();
+
+        //Finding initial best solution
+        for (Solution sol : inputSolutions) {
+            if(sol.getNbConflicts() < min){
+                bestSol = sol;
+                min = sol.getNbConflicts();
+                bestSolPos = cptBestSol;
+            }
+            cptBestSol++;
+        }
+
+        //Adding best solution to output
+        initialAdd.add(bestSol);
+        inputSolutions.remove(bestSolPos);
+
+        //Biaised Roulette - Fitness
+        ArrayList<Solution> probabilizedSolutions = new ArrayList<>();
+
+        //Probabilized List
+        for (Solution sol : inputSolutions) {
+            int fitnessFraction = (this.dimension * (this.dimension - 1) - sol.getNbConflicts() + 1 )/inputSolutions.size();
+            for(int i=0; i<=fitnessFraction; i++){
+                probabilizedSolutions.add(sol);
+            }
+        }
+
+        //Selection in list
+        int cpt = 1;
+        int cptDimension = 1;
+
+        Solution selectedSolution = probabilizedSolutions.get(random.nextInt(probabilizedSolutions.size()));
+        initialAdd.add(selectedSolution);
+        outputSolutions.add(initialAdd);
+
+        while(cptDimension < initialPopSize/2){
+            //System.out.println(cptDimension);
+            ArrayList<Solution> couple = new ArrayList<>();
+            cpt = 0;
+
+            while(cpt < reprodSize){
+                //System.out.println("********  CPT = "+ cpt);
+                selectedSolution = probabilizedSolutions.get(random.nextInt(probabilizedSolutions.size()));
+                //System.out.println("Trying solution : " + selectedSolution.getState());
+                boolean addable = true;
+
+                for (Solution sol : couple) {
+                    //System.out.println("Comparing to output sol : " + sol.getState());
+                    int cptCommon = 0;
+                    for(int i=0; i<sol.getState().size(); i++){
+                        if(sol.getState().get(i) == selectedSolution.getState().get(i)){
+                            cptCommon++;
+                        }
+                    }
+                    if(cptCommon == sol.getState().size()){
+                        addable = false;
+                    }
+                }
+
+                if(addable){
+                    couple.add(selectedSolution);
+                    //System.out.println("Addable solution : " + selectedSolution.getState() + "\n");
+                    cpt++;
+                }
+                else{
+                    //System.out.println("Non addable solution \n");
+                }
+            }
+            outputSolutions.add(couple);
+            cptDimension++;
+        }
+
+        System.out.println("\n Output solutions after reproduction : ");
+        for (ArrayList<Solution> couple : outputSolutions) {
+            for(Solution sol : couple){
+                System.out.println(sol.getState() + " | Fitness : "+ (this.dimension*(this.dimension-1) - sol.getNbConflicts()));
+            }
+            System.out.println("-------------------------------");
+        }
+
+        return outputSolutions;
+    }
+
+    public Solution geneticResolution(ArrayList<Solution> inputSolutions, float crossingProba, float mutationProba, int reprodSize){
+
+        /*// Init
+        ArrayList<ArrayList<Solution>> outputSolutions;
+
+        //Reproduction
+        outputSolutions = reproduction(inputSolutions, reprodSize);
 
         //Crossing
-        outputSolutions = crossing(inputSolutions, crossingProba);
+        outputSolutions = crossing(outputSolutions, crossingProba);
         if(outputSolutions == null || outputSolutions.isEmpty()){
             outputSolutions = inputSolutions;
         }
@@ -107,20 +205,8 @@ public class GeneticSolutionManager {
         //Mutation
         for (Solution sol : outputSolutions) {
             mutation(sol, mutationProba);
-        }
+        }*/
 
-        //Output Variables
-        int min = outputSolutions.get(0).getNbConflicts();
-        Solution bestSol = outputSolutions.get(0);
-
-        //Selection
-        for (Solution sol : outputSolutions) {
-            if(sol.getNbConflicts() < min){
-                 bestSol = sol;
-                 min = sol.getNbConflicts();
-            }
-        }
-        System.out.println("\n Best solution found : " + bestSol.getState() + " | Nb Conflicts : " + min);
-        return bestSol;
+        return null;
     }
 }
