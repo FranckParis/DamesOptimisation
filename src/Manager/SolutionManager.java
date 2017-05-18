@@ -37,26 +37,28 @@ public class SolutionManager {
         while (random2 == random){
             random2 = r.nextInt(solution.getSize());
         }
-        Solution otherSolution = new Solution(solution.change(solution.getState(),random,random2));
+        Solution otherSolution = new Solution(solution.getState());
+        otherSolution.setState(otherSolution.change(otherSolution.getState(),random,random2));
         return otherSolution;
     }
 
-    public Solution recuitSimulte(int n){
+    public Solution recuitSimulte(int n, double proba, double mu){
         //intitialize
         Solution xi = new Solution(n);
         Solution xmin = xi;
         int fmin = xmin.getNbConflicts();
-        double proba = 0.8;
-        double t = -randomSolutionAverage(n)/Math.log(proba);
-        double mu = 0.9;
-        double n1 = (Math.log(-randomSolutionAverage(n)/t*Math.log(proba)))/Math.log(mu);
+        //double proba = 0.8;
+        double average = randomSolutionAverage(n);
+        double t = -average/Math.log(proba);
+       // double mu = 0.9;
+        double n1 = n*2;//(Math.log(-average/t*Math.log(proba)))/Math.log(mu);
 
         for (int indBoucle1 = 0; indBoucle1 < Math.ceil(n1); indBoucle1++){
-            for(int i=0;i<Math.ceil(n1*n1);i++){
+            for(int i=0;i<Math.ceil(n1);i++){
                 Solution otherSolution = this.getOtherSolution(xi); // On prend une solution au hasard
                 int delta = otherSolution.getNbConflicts() - xi.getNbConflicts();
-                if(delta >= 0 ){
-                    xi = otherSolution;
+                if(delta <= 0 ){
+                    xi = new Solution(otherSolution.getState());
                     int fx = otherSolution.getNbConflicts();
                     if(fx < fmin){
                         fmin = fx;
@@ -70,7 +72,7 @@ public class SolutionManager {
                     Random random = new Random();
                     double p = random.nextDouble();
                     if( p<= Math.exp(-delta/t)){
-                        xi = otherSolution;
+                        xi = new Solution(otherSolution.getState());
                     }
                 }
             }
@@ -79,7 +81,7 @@ public class SolutionManager {
         return xmin;
     }
 
-    public Solution tabou(int n){
+    public Solution tabou(int n, int allowed){
         Solution xi = new Solution(n);
         Solution xmin = new Solution(xi.getState());
         int fmin = xmin.getNbConflicts();
@@ -88,9 +90,9 @@ public class SolutionManager {
         int fVoisin;
         List<Solution> voisins = new ArrayList<Solution>();
         List<Integer> forbiddenMoves = new ArrayList<Integer>();
-        int forbiddenMoveAllowedSize= 5;
+        int forbiddenMoveAllowedSize= allowed;
         int i= 0;
-        int nbIterations = 500;
+        int nbIterations = 200;
         do{
             voisins = this.getTabouVoisins(xi, forbiddenMoves);
             if(!voisins.isEmpty()){
@@ -111,7 +113,7 @@ public class SolutionManager {
                 fi = xi.getNbConflicts();
             }
             i++;
-        }while (!voisins.isEmpty() && i<nbIterations);
+        }while (!voisins.isEmpty() && i<nbIterations && fmin!=0);
         return xmin;
     }
 

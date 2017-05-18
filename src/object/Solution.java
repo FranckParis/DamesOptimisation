@@ -17,10 +17,10 @@ public class Solution {
         this.state = new ArrayList<>(state);
     }
 
-    public Solution(int n){
+    public Solution(int n) {
         size = n;
         state = new ArrayList<Integer>();
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             state.add(new Integer(i));
         }
         Collections.shuffle(state);
@@ -92,5 +92,9 @@ public class Solution {
         list.set(b,buffer);
 
         return list;
+    }
+
+    public void setState(ArrayList<Integer> state) {
+        this.state = state;
     }
 }
