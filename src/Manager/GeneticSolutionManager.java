@@ -1,7 +1,9 @@
 package Manager;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import object.Solution;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,6 +22,21 @@ public class GeneticSolutionManager {
         this.dimension = n;
     }
 
+    public Solution findBestSolution (ArrayList<Solution> solutions){
+
+        Solution bestSol = new Solution(this.dimension);
+        int max = this.dimension*(dimension-1) - solutions.get(0).getNbConflicts();
+
+        //Finding initial best solution
+        for (Solution sol : solutions) {
+            if(this.dimension*(dimension-1) - sol.getNbConflicts() > max){
+                bestSol = sol;
+                max = sol.getNbConflicts();
+            }
+        }
+        return bestSol;
+    }
+
     public ArrayList<Solution> crossing (ArrayList<Solution> inputSolutions, float crossingProba){
 
         //Variables
@@ -35,11 +52,11 @@ public class GeneticSolutionManager {
             int crossingPos = random.nextInt(inputSolutions.get(0).getSize()-1);
 
             //Debug displays
-            System.out.println("\n");
+            /*System.out.println("\n");
             System.out.println("CrossingPos = " + crossingPos);
             System.out.println("Input A : " + inputSolutions.get(0).getState());
             System.out.println("Input B : " + inputSolutions.get(1).getState());
-            System.out.println("---------------------------");
+            System.out.println("---------------------------");*/
 
             //First input solution
             for(int i = 0; i<=inputSolutions.get(0).getSize()-1; i++) {
@@ -69,8 +86,8 @@ public class GeneticSolutionManager {
             secondSol.addAll(geneSolution21);
             secondSol.addAll(geneSolution12);
 
-            System.out.println("Output A' : " + firstSol);
-            System.out.println("Output B' : " + secondSol);
+            //System.out.println("Output A' : " + firstSol);
+            //System.out.println("Output B' : " + secondSol);
 
             outputSolutions.add(new Solution(firstSol));
             outputSolutions.add(new Solution(secondSol));
@@ -79,19 +96,19 @@ public class GeneticSolutionManager {
         }
 
         else{
-            System.out.println("Crossing not happening");
-            return null;
+            //System.out.println("Crossing not happening");
+            return inputSolutions;
         }
     }
 
     public void mutation (Solution solution, float mutationProba){
         if(random.nextFloat() <= mutationProba) {
-            System.out.println("---------------------------");
-            System.out.println("Mutation happening on : " + solution.getState());
+            //System.out.println("---------------------------");
+            //System.out.println("Mutation happening on : " + solution.getState());
             int mutationPos = random.nextInt(solution.getSize()-1);
             int mutationValue = 1 + random.nextInt(solution.getSize());
             solution.getState().set(mutationPos, mutationValue);
-            System.out.println("Mutated solution : " + solution.getState());
+            //System.out.println("Mutated solution : " + solution.getState());
         }
     }
 
@@ -177,36 +194,71 @@ public class GeneticSolutionManager {
             cptDimension++;
         }
 
-        System.out.println("\n Output solutions after reproduction : ");
+        //System.out.println("\n Output solutions after reproduction : ");
         for (ArrayList<Solution> couple : outputSolutions) {
             for(Solution sol : couple){
-                System.out.println(sol.getState() + " | Fitness : "+ (this.dimension*(this.dimension-1) - sol.getNbConflicts()));
+                //System.out.println(sol.getState() + " | Fitness : "+ (this.dimension*(this.dimension-1) - sol.getNbConflicts()));
             }
-            System.out.println("-------------------------------");
+            //System.out.println("-------------------------------");
         }
 
         return outputSolutions;
     }
 
-    public Solution geneticResolution(ArrayList<Solution> inputSolutions, float crossingProba, float mutationProba, int reprodSize){
+    public Solution geneticResolution(ArrayList<Solution> inputSolutions, float crossingProba, float mutationProba, int reprodSize, int initialPopSize){
 
-        /*// Init
-        ArrayList<ArrayList<Solution>> outputSolutions;
+        // Init
+        ArrayList<ArrayList<Solution>> outputSolutions = new ArrayList<>();
+        ArrayList<ArrayList<Solution>> progessList;
+        ArrayList<Solution> collect = new ArrayList();
+        Solution bestSolution = new Solution(this.dimension);
 
-        //Reproduction
-        outputSolutions = reproduction(inputSolutions, reprodSize);
+        /*System.out.println("\n");
+        System.out.println("ReprodSize : " +  reprodSize);
+        System.out.println("InitialPopSize : " + initialPopSize);*/
 
-        //Crossing
-        outputSolutions = crossing(outputSolutions, crossingProba);
-        if(outputSolutions == null || outputSolutions.isEmpty()){
-            outputSolutions = inputSolutions;
+        if(initialPopSize > 1){
+
+            //System.out.println("----------------------- Iteration for size : " + initialPopSize);
+
+            //Reproduction
+            progessList = reproduction(inputSolutions, reprodSize, initialPopSize);
+
+            //Crossing
+            for(ArrayList<Solution> couple : progessList){
+                outputSolutions.add(crossing(couple, crossingProba));
+            }
+
+            //Mutation
+            for (ArrayList<Solution> couple : outputSolutions) {
+                for(Solution sol : couple){
+                    mutation(sol, mutationProba);
+                }
+            }
+
+            for (ArrayList<Solution> couple : outputSolutions) {
+                for (Solution sol : couple) {
+                    //System.out.println("Output Solution : " + sol.getState() + " | Fitness : " + (dimension*(dimension-1) - sol.getNbConflicts()));
+                    collect.add(sol);
+                }
+                //System.out.println("----------------------------------------");
+            }
+
+            /*System.out.println("\n Collect :");
+            for (Solution sol : collect) {
+                System.out.println("Output Solution : " + sol.getState() + " | Fitness : " + (dimension*(dimension-1) - sol.getNbConflicts()));
+            }*/
+
+            if((int)(initialPopSize/2) == 2){
+                geneticResolution(collect, crossingProba, mutationProba, 1, 2);
+            }
+            else{
+                geneticResolution(collect, crossingProba, mutationProba, reprodSize, initialPopSize/2);
+            }
         }
-
-        //Mutation
-        for (Solution sol : outputSolutions) {
-            mutation(sol, mutationProba);
-        }*/
-
-        return null;
+        if(!collect.isEmpty()){
+            bestSolution = findBestSolution(collect);
+        }
+        return bestSolution;
     }
 }

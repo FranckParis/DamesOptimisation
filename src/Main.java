@@ -55,8 +55,8 @@ public class Main {
             System.out.println("Solution : " + sol.getState() + " | NbConflicts : "+ sol.getNbConflicts()+ " | Fitness : " + (n*(n-1)-sol.getNbConflicts()));
         }
 
-        //gsm.geneticResolution(solutions, 0.7f, 0.8f);
-        gsm.reproduction(solutions,2, 10);
-
+        Solution bestSol = gsm.geneticResolution(solutions, 0.7f, 0.8f, 2, 10);
+        System.out.println("\n Best Solution : "+ bestSol.getState() + " | Fitness : " + (n*(n-1)-bestSol.getNbConflicts()));
+        //gsm.reproduction(solutions,2, 10);
     }
 }
