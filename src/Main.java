@@ -13,8 +13,11 @@ import static java.lang.System.currentTimeMillis;
  */
 public class Main {
     public static void main (String[] args) {
-        int n = 5;
+        int n = 100;
+        int pop = 1000;
+
         SolutionManager sm = new SolutionManager();
+        GeneticSolutionManager gsm = new GeneticSolutionManager(n);
 
         /*Solution s = sm.recuitSimulte(n);
         System.out.println(s);
@@ -26,57 +29,25 @@ public class Main {
         System.out.println(s.getNbConflicts());
         System.out.println(s.getState());*/
 
-        GeneticSolutionManager gsm = new GeneticSolutionManager(n);
-
-        Solution s1 = new Solution(n);
-        Solution s2 = new Solution(n);
-        Solution s3 = new Solution(n);
-        Solution s4 = new Solution(n);
-        Solution s5 = new Solution(n);
-        Solution s6 = new Solution(n);
-        Solution s7 = new Solution(n);
-        Solution s8 = new Solution(n);
-        Solution s9 = new Solution(n);
-        Solution s10 = new Solution(n);
 
         ArrayList<Solution> solutions = new ArrayList<>();
-        solutions.add(s1);
-        solutions.add(s2);
-        solutions.add(s3);
-        solutions.add(s4);
-        solutions.add(s5);
-        solutions.add(s6);
-        solutions.add(s7);
-        solutions.add(s8);
-        solutions.add(s9);
-        solutions.add(s10);
-
-        for (Solution sol : solutions) {
-            System.out.println("Solution : " + sol.getState() + " | NbConflicts : "+ sol.getNbConflicts()+ " | Fitness : " + (n*(n-1)-sol.getNbConflicts()));
+        for(int i=0; i<pop; i++){
+            solutions.add(new Solution(n));
         }
 
-        Solution bestSol = gsm.geneticResolution(solutions, 0.7f, 0.8f, 2, 10);
-        System.out.println("\n Best Solution : "+ bestSol.getState() + " | Fitness : " + (n*(n-1)-bestSol.getNbConflicts()));
-        //gsm.reproduction(solutions,2, 10);
+        System.out.println("Generating solutions");
+        for (Solution sol : solutions) {
+            System.out.println("Solution | NbConflicts : "+ sol.getNbConflicts()+ " | Fitness : " + (n*(n-1)-sol.getNbConflicts()));
+        }
+        System.out.println("Starting resolution. Please wait.");
 
-        //        for(int proba=5; proba<100;proba+=5){
-//            nbConflits=0;
-//            long startTime, totalTime = 0;
-//            for(int i=0; i<nbSimulations; i++){
-//                startTime = System.currentTimeMillis();
-//                Solution s = sm.recuitSimulte(n, (double)proba/100,0.8);
-//                //Solution s = new Solution(n);
-//                //System.out.println(s);
-//                nbConflits += s.getNbConflicts();
-//
-//                totalTime += System.currentTimeMillis()-startTime;
-//            }
-//            double averageConclifcts = (double)nbConflits / (double)nbSimulations;
-//            System.out.println("Proba:"+proba+" average total time:" + totalTime/nbSimulations + " with an average score of " + averageConclifcts +"/"+nbConflits );
-//        }
+        Solution bestSol = gsm.geneticResolution(solutions, 0.1f, 0.15f, 2, pop);
+        System.out.println("\n Best Solution : "+ bestSol.getState() + " | NbConflicts : "+ bestSol.getNbConflicts()+" | Fitness : " + (n*(n-1)-bestSol.getNbConflicts()));
+
+
         // tabou
-//        int nbConflits;
-//        int nbSimulations = 20;
+//      int nbConflits;
+//      int nbSimulations = 20;
 //
 //        for(int allowed=1; allowed<20;allowed++){
 //            nbConflits=0;
@@ -93,6 +64,5 @@ public class Main {
 //            double averageConclifcts = (double)nbConflits / (double)nbSimulations;
 //            System.out.println("Size:"+allowed+" average total time:" + totalTime/nbSimulations + " with an average score of " + averageConclifcts +"/"+nbConflits );
 //        }
-
     }
 }
