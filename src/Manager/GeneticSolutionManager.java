@@ -172,7 +172,17 @@ public class GeneticSolutionManager {
         return outputSolutions;
     }
 
-    public Solution geneticResolution(ArrayList<Solution> inputSolutions, float crossingProba, float mutationProba, int reprodSize, int initialPopSize){
+    public Solution callGeneticResolution(float crossingProba, float mutationProba, int reprodSize, int initialPopSize){
+
+        ArrayList<Solution> inputSolutions = new ArrayList<>();
+        for(int i=0; i<initialPopSize; i++){
+            inputSolutions.add(new Solution(dimension));
+        }
+        return geneticResolution(inputSolutions, crossingProba, mutationProba, reprodSize, initialPopSize);
+    }
+
+    public Solution geneticResolution(ArrayList<Solution> inputSolutions,float crossingProba, float mutationProba, int reprodSize, int initialPopSize){
+
 
         // Init
         ArrayList<ArrayList<Solution>> outputSolutions = new ArrayList<>();

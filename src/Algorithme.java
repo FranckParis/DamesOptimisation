@@ -85,27 +85,18 @@ public class Algorithme extends Application {
                             dialog.setContentText("Taille de la population :\nChoisissez un nombre");
                         }
                     }
-
-                    ArrayList<Solution> solutions = new ArrayList<>();
-                    for(int i=0; i<pop; i++){
-                        solutions.add(new Solution(n));
-                    }
-
-                    System.out.println("Generating solutions");
-                    for (Solution sol : solutions) {
-                        System.out.println("Solution | NbConflicts : "+ sol.getNbConflicts()+ " | Fitness : " + (n*(n-1)-sol.getNbConflicts()));
-                    }
-                    System.out.println("Starting resolution. Please wait.");
-
-                    Solution bestSol = gsm.geneticResolution(solutions, 0.1f, 0.15f, 2, pop);
+                    System.out.println("calculating Solution");
+                    Solution bestSol = gsm.callGeneticResolution(0.8f, 0.1f, 2, pop);
                     System.out.println("\n Best Solution : "+ bestSol.getState() + " \n NbConflicts : "+ bestSol.getNbConflicts()+" \n Fitness : " + (n*(n-1)-bestSol.getNbConflicts())); break;
                 case "Recuit":
+                    System.out.println("calculating Solution");
                     Solution solRecuit = sm.recuitSimulte(n);
                     System.out.println(solRecuit);
                     System.out.println(solRecuit.getNbConflicts());
                     System.out.println(solRecuit.getState());
                     break;
                 case "Tabou":
+                    System.out.println("calculating Solution");
                     Solution solTabou = sm.tabou(n,5);
                     System.out.println(solTabou);
                     System.out.println(solTabou.getNbConflicts());
