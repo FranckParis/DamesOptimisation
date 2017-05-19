@@ -29,7 +29,7 @@ public class GeneticSolutionManager {
         for (Solution sol : solutions) {
             if(this.dimension*(dimension-1) - sol.getNbConflicts() > max){
                 bestSol = sol;
-                max = sol.getNbConflicts();
+                max = this.dimension*(dimension-1) - sol.getNbConflicts();
             }
         }
         return bestSol;

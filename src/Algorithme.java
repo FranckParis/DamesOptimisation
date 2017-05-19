@@ -87,7 +87,7 @@ public class Algorithme extends Application {
                     }
                     System.out.println("Calculating Solution");
                     long startTime = System.currentTimeMillis();
-                    Solution bestSol = gsm.callGeneticResolution(0.1f, 0.1f, 2, pop);
+                    Solution bestSol = gsm.callGeneticResolution(0.01f, 0.01f, 2, pop);
                     System.out.println("Processing done in : " + (System.currentTimeMillis() - startTime) + " ms");
                     System.out.println("\n Best Solution : "+ bestSol.getState() + " \n NbConflicts : "+ bestSol.getNbConflicts()+" \n Fitness : " + (n*(n-1)-bestSol.getNbConflicts())); break;
                 case "Recuit":
