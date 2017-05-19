@@ -87,12 +87,14 @@ public class GeneticSolutionManager {
         }
     }
 
-    public void mutation (Solution solution, float mutationProba){
+    public Solution mutation (Solution solution, float mutationProba){
+        Solution mutatedSol = solution;
         if(random.nextFloat() <= mutationProba) {
             int mutationPos = random.nextInt(solution.getSize()-1);
             int mutationValue = 1 + random.nextInt(solution.getSize());
-            solution.getState().set(mutationPos, mutationValue);
+            mutatedSol.getState().set(mutationPos, mutationValue);
         }
+        return mutatedSol;
     }
 
 
@@ -201,15 +203,10 @@ public class GeneticSolutionManager {
             }
 
             //Mutation
+            Solution temp;
             for (ArrayList<Solution> couple : outputSolutions) {
                 for(Solution sol : couple){
-                    mutation(sol, mutationProba);
-                }
-            }
-
-            for (ArrayList<Solution> couple : outputSolutions) {
-                for (Solution sol : couple) {
-                    collect.add(sol);
+                    collect.add(mutation(sol, mutationProba));
                 }
             }
             geneticResolution(collect, crossingProba, mutationProba, reprodSize, initialPopSize-1);

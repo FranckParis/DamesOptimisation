@@ -85,8 +85,10 @@ public class Algorithme extends Application {
                             dialog.setContentText("Taille de la population :\nChoisissez un nombre");
                         }
                     }
-                    System.out.println("calculating Solution");
-                    Solution bestSol = gsm.callGeneticResolution(0.8f, 0.1f, 2, pop);
+                    System.out.println("Calculating Solution");
+                    long startTime = System.currentTimeMillis();
+                    Solution bestSol = gsm.callGeneticResolution(0.1f, 0.1f, 2, pop);
+                    System.out.println("Processing done in : " + (System.currentTimeMillis() - startTime) + " ms");
                     System.out.println("\n Best Solution : "+ bestSol.getState() + " \n NbConflicts : "+ bestSol.getNbConflicts()+" \n Fitness : " + (n*(n-1)-bestSol.getNbConflicts())); break;
                 case "Recuit":
                     System.out.println("calculating Solution");
