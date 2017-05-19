@@ -33,9 +33,12 @@ public class Algorithme extends Application {
             try
             {
                 n = Integer.parseInt(str);
+                if(n < 4){
+                    n = 0;
+                    dialog.setContentText("Taille de l'échiquier :\nChoisissez un nombre supérieur à 4");
+                }
             }
-            catch(NumberFormatException nfe)
-            {
+            catch(NumberFormatException nfe) {
                 n = 0;
                 dialog.setContentText("Taille de l'échiquier :\nChoisissez un nombre");
             }
