@@ -44,7 +44,7 @@ public class Solution {
             while (indLigne>=0 && colonneDiagonale<size-1){ //parcours diagonale 1
                 colonneDiagonale++;
                 indLigne --;
-                if(state.get(colonneDiagonale) == indLigne){
+                if(state.get(colonneDiagonale) == indLigne || state.get(colonneDiagonale) == state.get(indColonne)){
                     nbCollisions++;
                 }
             }
