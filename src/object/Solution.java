@@ -69,7 +69,7 @@ public class Solution {
             stb.append('|');
             for(int j=0; j<state.size();j++){
                 if (j==posQueen){
-                    stb.append('R');
+                    stb.append('Q');
                 }
                 else{
                     stb.append(' ');
