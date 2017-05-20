@@ -57,8 +57,8 @@ public class Algorithme extends Application {
         String errorMessage = "";
         ChoiceDialog<String> dialog1 = new ChoiceDialog<>(choice1, choices);
 
-        dialog1.setTitle("Choix de type de connexion");
-        dialog1.setContentText(errorMessage + "\n Choisissez votre moyen de connexion :");
+        dialog1.setTitle("Choix Algorithme");
+        dialog1.setContentText(errorMessage + "\n Choisissez un algorithme :");
         Optional<String> result = dialog1.showAndWait();
         if(result.isPresent()){
             algo = result.get();
@@ -88,9 +88,32 @@ public class Algorithme extends Application {
                             dialog.setContentText("Taille de la population :\nChoisissez un nombre");
                         }
                     }
+                    TextInputDialog dialog3 = new TextInputDialog("");
+                    dialog3.setTitle("Nombre d'itérations");
+                    dialog3.setHeaderText("Veuillez choisir le nombre d'itérations à effectuer");
+                    dialog3.setContentText("Nombre d'itérations :");
+                    int iterNumber = 0;
+                    // Traditional way to get the response value.
+                    while(iterNumber == 0){
+                        Optional<String> result3 = dialog3.showAndWait();
+                        if (!result3.isPresent()){
+                            return;
+                        }
+                        String str = result3.get();
+
+                        try
+                        {
+                            iterNumber = Integer.parseInt(str);
+                        }
+                        catch(NumberFormatException nfe)
+                        {
+                            iterNumber = 0;
+                            dialog.setContentText("Nombre d'itérations :\nChoisissez un nombre");
+                        }
+                    }
                     System.out.println("Calculating Solution");
                     long startTime = System.currentTimeMillis();
-                    Solution bestSol = gsm.callGeneticResolution(0.01f, 0.01f, 2, pop);
+                    Solution bestSol = gsm.callGeneticResolution(0.01f, 0.01f, 2, pop, iterNumber);
                     System.out.println("Processing done in : " + (System.currentTimeMillis() - startTime) + " ms");
                     System.out.println("\n Best Solution : "+ bestSol.getState() + " \n NbConflicts : "+ bestSol.getNbConflicts()+" \n Fitness : " + (n*(n-1)-bestSol.getNbConflicts())); break;
                 case "Recuit":

@@ -174,17 +174,16 @@ public class GeneticSolutionManager {
         return outputSolutions;
     }
 
-    public Solution callGeneticResolution(float crossingProba, float mutationProba, int reprodSize, int initialPopSize){
+    public Solution callGeneticResolution(float crossingProba, float mutationProba, int reprodSize, int initialPopSize, int iterNumber){
 
         ArrayList<Solution> inputSolutions = new ArrayList<>();
         for(int i=0; i<initialPopSize; i++){
             inputSolutions.add(new Solution(dimension));
         }
-        return geneticResolution(inputSolutions, crossingProba, mutationProba, reprodSize, initialPopSize);
+        return geneticResolution(inputSolutions, crossingProba, mutationProba, reprodSize, initialPopSize, iterNumber);
     }
 
-    public Solution geneticResolution(ArrayList<Solution> inputSolutions,float crossingProba, float mutationProba, int reprodSize, int initialPopSize){
-
+    public Solution geneticResolution(ArrayList<Solution> inputSolutions,float crossingProba, float mutationProba, int reprodSize, int initialPopSize, int iterNumber){
 
         // Init
         ArrayList<ArrayList<Solution>> outputSolutions = new ArrayList<>();
@@ -192,7 +191,7 @@ public class GeneticSolutionManager {
         ArrayList<Solution> collect = new ArrayList();
         Solution bestSolution = new Solution(this.dimension);
 
-        if(initialPopSize > 1){
+        if(iterNumber > 1){
 
             //Reproduction
             progessList = reproduction(inputSolutions, reprodSize, initialPopSize);
@@ -209,7 +208,7 @@ public class GeneticSolutionManager {
                     collect.add(mutation(sol, mutationProba));
                 }
             }
-            geneticResolution(collect, crossingProba, mutationProba, reprodSize, initialPopSize-1);
+            geneticResolution(collect, crossingProba, mutationProba, reprodSize, initialPopSize, iterNumber-1);
         }
         if(!collect.isEmpty()){
             bestSolution = findBestSolution(collect);
@@ -217,3 +216,4 @@ public class GeneticSolutionManager {
         return bestSolution;
     }
 }
+

@@ -18,7 +18,6 @@ public class Main {
         algorithme.run();
         System.out.println("Cette solution a été trouvé en "+ (System.currentTimeMillis()-startTime) +"ms");
 
-
         // tabou
 //        SolutionManager sm = new SolutionManager();
 //      int nbConflits;
