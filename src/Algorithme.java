@@ -6,6 +6,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 import object.Solution;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +15,9 @@ import java.util.Optional;
  * Created by Quentin on 18/05/2017.
  */
 public class Algorithme extends Application {
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("Echiquier");
         dialog.setHeaderText("Veuillez choisir la taille de l'échiquier");
