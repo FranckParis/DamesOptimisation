@@ -6,7 +6,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 import object.Solution;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +15,11 @@ import java.util.Optional;
  */
 public class Algorithme extends Application {
 
+    private static long temps;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+        long startTime = 0;
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("Echiquier");
         dialog.setHeaderText("Veuillez choisir la taille de l'échiquier");
@@ -113,18 +115,20 @@ public class Algorithme extends Application {
                         }
                     }
                     System.out.println("Calculating Solution");
-                    long startTime = System.currentTimeMillis();
+                    startTime = System.currentTimeMillis();
                     Solution bestSol = gsm.callGeneticResolution(0.01f, 0.01f, 2, pop, iterNumber);
                     System.out.println("Processing done in : " + (System.currentTimeMillis() - startTime) + " ms");
                     System.out.println("\n Best Solution : "+ bestSol.getState() + " \n NbConflicts : "+ bestSol.getNbConflicts()+" \n Fitness : " + (n*(n-1)-bestSol.getNbConflicts())); break;
                 case "Recuit":
+                    startTime = System.currentTimeMillis();
                     System.out.println("calculating Solution");
-                    Solution solRecuit = sm.recuitSimulte(n);
+                    Solution solRecuit = sm.recuitSimulte(n,0.1);
                     System.out.println(solRecuit);
                     System.out.println(solRecuit.getNbConflicts());
                     System.out.println(solRecuit.getState());
                     break;
                 case "Tabou":
+                    startTime = System.currentTimeMillis();
                     System.out.println("calculating Solution");
                     Solution solTabou = sm.tabou(n,5);
                     System.out.println(solTabou);
@@ -132,14 +136,16 @@ public class Algorithme extends Application {
                     System.out.println(solTabou.getState());
                     break;
             }
+            temps = System.currentTimeMillis()-startTime;
         }
         else{
             System.out.println("Vous avez quitté");
             return;
         }
     }
-    public void run() {
+    public long run() {
         String [] empty = new String[0];
         Application.launch(empty);
+        return temps;
     }
 }

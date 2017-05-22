@@ -14,7 +14,7 @@ public class LineChart_AWT extends ApplicationFrame {
         super(applicationTitle);
         JFreeChart lineChart = ChartFactory.createLineChart(
                 chartTitle,
-                "mu","Temps d'éxécution (ms)",
+                "taille de la liste","Temps d'éxécution (ms)",
                 createDataset(),
                 PlotOrientation.VERTICAL,
                 true,true,false);
@@ -29,22 +29,22 @@ public class LineChart_AWT extends ApplicationFrame {
         SolutionManager sm = new SolutionManager();
         int nbConflits;
         int nbSimulations = 10;
-        int n = 100;
+        int n = 40;
 
-        for(int mu=1; mu<10;mu++){
-            double trueMu = (double) mu/10;
-            System.out.println("Current:" +trueMu);
+        for(int listeTabou=1; listeTabou<20;listeTabou++){
+
+            System.out.println("listSize:" +listeTabou);
             nbConflits=0;
             long startTime, totalTime = 0;
             for(int i=0; i<nbSimulations; i++){
                 startTime = System.currentTimeMillis();
-                Solution s = sm.recuitSimulte(n,trueMu);
+                Solution s = sm.tabou(n,listeTabou);
                 nbConflits += s.getNbConflicts();
 
                 totalTime += System.currentTimeMillis()-startTime;
             }
             double averageConclicts = (double)nbConflits / (double)nbSimulations;
-            dataset.addValue(totalTime/nbSimulations,"time", String.valueOf(trueMu));
+            dataset.addValue(totalTime/nbSimulations,"time", String.valueOf(listeTabou));
         }
         return dataset;
     }
@@ -52,7 +52,7 @@ public class LineChart_AWT extends ApplicationFrame {
     public static void main( String[ ] args ) {
         LineChart_AWT chart = new LineChart_AWT(
                 "Temps moyen sur 10 essais" ,
-                "Temps d'éxécution selon mu(n=100)");
+                "Temps d'éxécution selon la taille de la liste(n=40)");
 
         chart.pack( );
         RefineryUtilities.centerFrameOnScreen( chart );

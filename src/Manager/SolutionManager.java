@@ -42,15 +42,15 @@ public class SolutionManager {
         return otherSolution;
     }
 
-    public Solution recuitSimulte(int n){
+    public Solution recuitSimulte(int n, double mu){
         //intitialize
         Solution xi = new Solution(n);
         Solution xmin = xi;
         int fmin = xmin.getNbConflicts();
-        double proba = 0.1;
+        double proba = 0.3;
         double average = randomSolutionAverage(n);
         double t = -average/Math.log(proba);
-        double mu = 0.1;
+        //double mu = 0.1;
         double n1 = n*2;//(Math.log(-average/t*Math.log(proba)))/Math.log(mu);
 
         for (int indBoucle1 = 0; indBoucle1 < Math.ceil(n1); indBoucle1++){
@@ -78,6 +78,7 @@ public class SolutionManager {
             }
             t *= mu;
         }
+        System.out.print(fmin);
         return xmin;
     }
 

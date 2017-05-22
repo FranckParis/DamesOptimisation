@@ -1,5 +1,6 @@
 import Manager.GeneticSolutionManager;
 import Manager.SolutionManager;
+import javafx.scene.chart.PieChart;
 import object.Solution;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -15,19 +16,17 @@ import static java.lang.System.currentTimeMillis;
  */
 public class Main {
     public static void main (String[] args) {
-        SolutionManager sm = new SolutionManager();
-        System.out.println("40 :" + sm.randomSolutionAverage(40));
-        System.out.println("60 :" + sm.randomSolutionAverage(60));
-        System.out.println("80 :" + sm.randomSolutionAverage(80));
-        System.out.println("100 :" + sm.randomSolutionAverage(100));
+//        SolutionManager sm = new SolutionManager();
+//        System.out.println("40 :" + sm.randomSolutionAverage(40));
+//        System.out.println("60 :" + sm.randomSolutionAverage(60));
+//        System.out.println("80 :" + sm.randomSolutionAverage(80));
+//        System.out.println("100 :" + sm.randomSolutionAverage(100));
 
-//        PieChart demo = new PieChart("Comparison", "Which operating system are you using?");
-//        demo.pack();
-//        demo.setVisible(true);
-//        long startTime = System.currentTimeMillis();
-//        Algorithme algorithme = new Algorithme();
-//        algorithme.run();
-//        System.out.println("Cette solution a été trouvé en "+ (System.currentTimeMillis()-startTime) +"ms");
+
+        long startTime = System.currentTimeMillis();
+        Algorithme algorithme = new Algorithme();
+        long temps = algorithme.run();
+        System.out.println("Cette solution a été trouvé en "+ (temps) +"ms");
 
         // tabou
 
