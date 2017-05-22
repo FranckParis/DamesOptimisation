@@ -28,23 +28,23 @@ public class LineChart_AWT extends ApplicationFrame {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
         SolutionManager sm = new SolutionManager();
         int nbConflits;
-        int nbSimulations = 10;
-        int n = 40;
+        int nbSimulations = 20;
+        //int n = 40;
 
-        for(int listeTabou=1; listeTabou<20;listeTabou++){
+        for(int n=40; n<100;n+=5){
 
-            System.out.println("listSize:" +listeTabou);
+            System.out.println("Current:" +n);
             nbConflits=0;
             long startTime, totalTime = 0;
             for(int i=0; i<nbSimulations; i++){
                 startTime = System.currentTimeMillis();
-                Solution s = sm.tabou(n,listeTabou);
+                Solution s = sm.recuitSimulte(n,0.7);
                 nbConflits += s.getNbConflicts();
 
                 totalTime += System.currentTimeMillis()-startTime;
             }
             double averageConclicts = (double)nbConflits / (double)nbSimulations;
-            dataset.addValue(totalTime/nbSimulations,"time", String.valueOf(listeTabou));
+            dataset.addValue(totalTime/nbSimulations,"time", String.valueOf(n));
         }
         return dataset;
     }

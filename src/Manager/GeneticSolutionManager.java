@@ -186,7 +186,6 @@ public class GeneticSolutionManager {
     public Solution geneticResolution(ArrayList<Solution> inputSolutions,float crossingProba, float mutationProba, int reprodSize, int initialPopSize, int iterNumber){
 
         // Init
-        ArrayList<ArrayList<Solution>> outputSolutions = new ArrayList<>();
         ArrayList<ArrayList<Solution>> progessList;
         ArrayList<Solution> collect = new ArrayList();
         Solution bestSolution = new Solution(this.dimension);
@@ -196,15 +195,11 @@ public class GeneticSolutionManager {
             //Reproduction
             progessList = reproduction(inputSolutions, reprodSize, initialPopSize);
 
-            //Crossing
+            //Crossing and mutation
             for(ArrayList<Solution> couple : progessList){
-                outputSolutions.add(crossing(couple, crossingProba));
-            }
-
-            //Mutation
-            Solution temp;
-            for (ArrayList<Solution> couple : outputSolutions) {
-                for(Solution sol : couple){
+                ArrayList<Solution> crossedCouple = new ArrayList<>();
+                crossedCouple = crossing(couple, crossingProba);
+                for(Solution sol : crossedCouple){
                     collect.add(mutation(sol, mutationProba));
                 }
             }
